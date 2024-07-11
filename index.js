@@ -28,22 +28,33 @@ async function run() {
     const userCollection=client.db('hotelBooking').collection('user')
     const roomCollection=client.db('hotelBooking').collection('rooms')
 
-// user data save in database
-app.put('/users/:email', async(req,res)=>{
-    const email= req.params.email;
-    const user = req.body;
-    const filter = {email: email};
-    const options = { upsert: true };
-    const updateDoc = {
-        $set: {
-          user
-        },
-      };
-
-      const result = await userCollection.updateOne(filter, updateDoc, options);
-      console.log(result);
-      res.send(result)
+ // Save user email and role in DB
+ app.put('/users/:email', async (req, res) => {
+  const email = req.params.email
+  const user = req.body
+  const query = { email: email }
+  const options = { upsert: true }
+  const updateDoc = {
+    $set: user,
+  }
+  const result = await userCollection.updateOne(query, updateDoc, options)
+  console.log(result)
+  res.send(result)
 })
+
+// Save user email and role in DB
+// app.put('/users/:email', async (req, res) => {
+//   const email = req.params.email
+//   const user = req.body
+//   const query = { email: email }
+//   const options = { upsert: true }
+//   const updateDoc = {
+//     $set: user.email,
+//   }
+//   const result = await userCollection.updateOne(query, updateDoc, options)
+//   console.log(result)
+//   res.send(result)
+// })
 
 // addrooms data post 
 app.post('/rooms', async(req,res)=>{
